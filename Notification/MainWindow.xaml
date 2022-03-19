@@ -1,0 +1,27 @@
+﻿<Window x:Class="Notification.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:src="clr-namespace:Notification.Src"
+        xmlns:local="clr-namespace:Notification"
+        mc:Ignorable="d"
+        Title="MainWindow" Height="450" Width="800"
+        Background="AliceBlue">
+    <Window.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="/Styles/StlGrowl.xaml"/>
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </Window.Resources>
+    <Grid>
+        <Button Content="Notify" Width="200" Height="100" Click="Button_Click"/>
+        <StackPanel x:Name="notifyPanel" 
+                    HorizontalAlignment="Right" VerticalAlignment="Top">
+            <StackPanel.Resources>
+                <Style TargetType="src:Growl" BasedOn="{StaticResource uniGrowl}"/>
+            </StackPanel.Resources>
+        </StackPanel>        
+    </Grid>
+</Window>
