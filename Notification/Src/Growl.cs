@@ -36,8 +36,6 @@ namespace Notification.Src
 
         #region Data
 
-        //private static GrowlWindow GrowlWindow;
-
         private Panel _panelMore;
 
         private Grid _gridMain;
@@ -50,14 +48,8 @@ namespace Notification.Src
 
         private int _waitTime = 6;
 
-        /// <summary>
-        ///     计数
-        /// </summary>
         private int _tickCount;
 
-        /// <summary>
-        ///     关闭计时器
-        /// </summary>
         private DispatcherTimer _timerClose;
 
         private static readonly Dictionary<string, Panel> PanelDic = new Dictionary<string, Panel>();
@@ -151,9 +143,6 @@ namespace Notification.Src
 
         private Func<bool, bool> ActionBeforeClose { get; set; }
 
-        /// <summary>
-        ///     消息容器
-        /// </summary>
         public static Panel GrowlPanel { get; set; }
 
         internal static readonly DependencyProperty CancelStrProperty = DependencyProperty.Register(
@@ -300,9 +289,6 @@ namespace Notification.Src
             set => SetValue(IconBrushProperty, value);
         }
 
-        /// <summary>
-        ///     开始计时器
-        /// </summary>
         private void StartTimer()
         {
             _timerClose = new DispatcherTimer
@@ -384,10 +370,6 @@ namespace Notification.Src
             if (!_staysOpen) StartTimer();
         }
 
-        /// <summary>
-        ///     显示信息
-        /// </summary>
-        /// <param name="growlInfo"></param>
         private static void Show(GrowlInfo growlInfo)
         {
             Application.Current.Dispatcher?.Invoke(
@@ -575,117 +557,66 @@ namespace Notification.Src
             }
         }
 
-        /// <summary>
-        ///     成功
-        /// </summary>
-        /// <param name="message"></param>
-        /// <param name="token"></param>
         public static void Success(string message, string token = "") => Success(new GrowlInfo
         {
             Message = message,
             Token = token
         });
 
-        /// <summary>
-        ///     成功
-        /// </summary>
-        /// <param name="growlInfo"></param>
         public static void Success(GrowlInfo growlInfo)
         {
             InitGrowlInfo(ref growlInfo, InfoType.Success);
             Show(growlInfo);
         }
 
-        /// <summary>
-        ///     消息
-        /// </summary>
-        /// <param name="message"></param>
-        /// <param name="token"></param>
         public static void Info(string message, string token = "") => Info(new GrowlInfo
         {
             Message = message,
             Token = token
         });
 
-        /// <summary>
-        ///     消息
-        /// </summary>
-        /// <param name="growlInfo"></param>
         public static void Info(GrowlInfo growlInfo)
         {
             InitGrowlInfo(ref growlInfo, InfoType.Info);
             Show(growlInfo);
         }
 
-        /// <summary>
-        ///     警告
-        /// </summary>
-        /// <param name="message"></param>
-        /// <param name="token"></param>
         public static void Warning(string message, string token = "") => Warning(new GrowlInfo
         {
             Message = message,
             Token = token
         });
 
-        /// <summary>
-        ///     警告
-        /// </summary>
-        /// <param name="growlInfo"></param>
         public static void Warning(GrowlInfo growlInfo)
         {
             InitGrowlInfo(ref growlInfo, InfoType.Warning);
             Show(growlInfo);
         }
 
-        /// <summary>
-        ///     错误
-        /// </summary>
-        /// <param name="message"></param>
-        /// <param name="token"></param>
         public static void Error(string message, string token = "") => Error(new GrowlInfo
         {
             Message = message,
             Token = token
         });
 
-        /// <summary>
-        ///     错误
-        /// </summary>
-        /// <param name="growlInfo"></param>
         public static void Error(GrowlInfo growlInfo)
         {
             InitGrowlInfo(ref growlInfo, InfoType.Error);
             Show(growlInfo);
         }
 
-        /// <summary>
-        ///     严重
-        /// </summary>
-        /// <param name="message"></param>
-        /// <param name="token"></param>
         public static void Fatal(string message, string token = "") => Fatal(new GrowlInfo
         {
             Message = message,
             Token = token
         });
 
-        /// <summary>
-        ///     严重
-        /// </summary>
-        /// <param name="growlInfo"></param>
         public static void Fatal(GrowlInfo growlInfo)
         {
             InitGrowlInfo(ref growlInfo, InfoType.Fatal);
             Show(growlInfo);
         }
 
-        /// <summary>
-        ///     询问
-        /// </summary>
-        /// <param name="message"></param>
-        /// <param name="actionBeforeClose"></param>
-        /// <param name="token"></param>
         public static void Ask(string message, Func<bool, bool> actionBeforeClose, string token = "") => Ask(new GrowlInfo
         {
             Message = message,
@@ -693,10 +624,6 @@ namespace Notification.Src
             Token = token
         });
 
-        /// <summary>
-        ///     询问
-        /// </summary>
-        /// <param name="growlInfo"></param>
         public static void Ask(GrowlInfo growlInfo)
         {
             InitGrowlInfo(ref growlInfo, InfoType.Ask);
@@ -705,9 +632,6 @@ namespace Notification.Src
 
         private void ButtonClose_OnClick(object sender, RoutedEventArgs e) => Close();
 
-        /// <summary>
-        ///     关闭
-        /// </summary>
         private void Close(bool invokeActionBeforeClose = false, bool invokeParam = true)
         {
             if (invokeActionBeforeClose)
@@ -729,10 +653,6 @@ namespace Notification.Src
             transform.BeginAnimation(TranslateTransform.XProperty, animation);
         }
 
-        /// <summary>
-        ///     清除
-        /// </summary>
-        /// <param name="token"></param>
         public static void Clear(string token = "")
         {
             if (!string.IsNullOrEmpty(token))
@@ -748,10 +668,6 @@ namespace Notification.Src
             }
         }
 
-        /// <summary>
-        ///     清除
-        /// </summary>
-        /// <param name="panel"></param>
         private static void Clear(Panel panel)
         {
             if (panel == null) return;
