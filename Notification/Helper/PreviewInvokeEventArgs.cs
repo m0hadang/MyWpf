@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Notification.Src
+namespace Notification.Helper
 {
     public class PreviewInvokeEventArgs : EventArgs
     {

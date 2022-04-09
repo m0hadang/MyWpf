@@ -2,7 +2,7 @@
 using System.Windows.Media;
 using System.Windows.Media.Effects;
 
-namespace Notification.Src
+namespace Notification.TriggerSrc
 {
     public abstract class TransitionEffect : ShaderEffect
     {

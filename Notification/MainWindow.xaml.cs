@@ -11,6 +11,8 @@ namespace Notification
         public MainWindow()
         {
             InitializeComponent();
+
+            //리소스 적용한 패널을 전달
             Growl.SetGrowlParent(notifyPanel, true);
         }
 

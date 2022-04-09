@@ -1,28 +1,33 @@
-﻿using System;
+﻿using Notification.Helper;
+using System;
 using System.Globalization;
 using System.Windows;
-using System.Windows.Controls.Primitives;
+using System.Windows.Markup;
 using System.Windows.Media.Animation;
-using Notification.UIControl;
 
-namespace Notification.Src
+namespace Notification.TriggerSrc
 {
-    [DefaultTrigger(typeof(UIElement), typeof(EventTrigger), "MouseLeftButtonDown")]
-    [DefaultTrigger(typeof(ButtonBase), typeof(EventTrigger), "Click")]
-    public abstract class TriggerAction : Animatable, IAttachedObject
+    [ContentProperty("Actions")]
+    public abstract class TriggerBase : Animatable, IAttachedObject
     {
-        public static readonly DependencyProperty IsEnabledProperty = DependencyProperty.Register("IsEnabled",
-            typeof(bool), typeof(TriggerAction), new FrameworkPropertyMetadata(ValueBoxes.TrueBox));
+        private static readonly DependencyPropertyKey ActionsPropertyKey =
+            DependencyProperty.RegisterReadOnly("Actions", typeof(TriggerActionCollection), typeof(TriggerBase),
+                new FrameworkPropertyMetadata());
 
-        private readonly Type _associatedObjectTypeConstraint;
+        public static readonly DependencyProperty ActionsProperty = ActionsPropertyKey.DependencyProperty;
 
         private DependencyObject _associatedObject;
-        private bool _isHosted;
+        private readonly Type _associatedObjectTypeConstraint;
 
-        internal TriggerAction(Type associatedObjectTypeConstraint)
+        internal TriggerBase(Type associatedObjectTypeConstraint)
         {
             _associatedObjectTypeConstraint = associatedObjectTypeConstraint;
+            var actions = new TriggerActionCollection();
+            SetValue(ActionsPropertyKey, actions);
         }
+
+        public TriggerActionCollection Actions =>
+            (TriggerActionCollection)GetValue(ActionsProperty);
 
         protected DependencyObject AssociatedObject
         {
@@ -42,34 +47,13 @@ namespace Notification.Src
             }
         }
 
-        public bool IsEnabled
-        {
-            get => (bool)GetValue(IsEnabledProperty);
-            set => SetValue(IsEnabledProperty, ValueBoxes.BooleanBox(value));
-        }
-
-        internal bool IsHosted
-        {
-            get
-            {
-                ReadPreamble();
-                return _isHosted;
-            }
-            set
-            {
-                WritePreamble();
-                _isHosted = value;
-                WritePostscript();
-            }
-        }
-
         public void Attach(DependencyObject dependencyObject)
         {
             if (!Equals(dependencyObject, AssociatedObject))
             {
                 if (AssociatedObject != null)
                     throw new InvalidOperationException(ExceptionStringTable
-                        .CannotHostTriggerActionMultipleTimesExceptionMessage);
+                        .CannotHostTriggerMultipleTimesExceptionMessage);
                 if (dependencyObject != null &&
                     !AssociatedObjectTypeConstraint.IsInstanceOfType(dependencyObject))
                     throw new InvalidOperationException(string.Format(CultureInfo.CurrentCulture,
@@ -79,6 +63,7 @@ namespace Notification.Src
                 WritePreamble();
                 _associatedObject = dependencyObject;
                 WritePostscript();
+                Actions.Attach(dependencyObject);
                 OnAttached();
             }
         }
@@ -89,23 +74,31 @@ namespace Notification.Src
             WritePreamble();
             _associatedObject = null;
             WritePostscript();
+            Actions.Detach();
         }
 
         DependencyObject IAttachedObject.AssociatedObject =>
             AssociatedObject;
 
-        internal void CallInvoke(object parameter)
-        {
-            if (IsEnabled)
-                Invoke(parameter);
-        }
+        public event EventHandler<PreviewInvokeEventArgs> PreviewInvoke;
 
         protected override Freezable CreateInstanceCore()
         {
             return (Freezable)Activator.CreateInstance(GetType());
         }
 
-        protected abstract void Invoke(object parameter);
+        protected void InvokeActions(object parameter)
+        {
+            if (PreviewInvoke != null)
+            {
+                var e = new PreviewInvokeEventArgs();
+                PreviewInvoke(this, e);
+                if (e.Cancelling)
+                    return;
+            }
+            foreach (var action in Actions)
+                action.CallInvoke(parameter);
+        }
 
         protected virtual void OnAttached()
         {

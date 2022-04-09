@@ -17,6 +17,9 @@
     </Window.Resources>
     <Grid>
         <Button Content="Notify" Width="200" Height="100" Click="Button_Click"/>
+        
+        <!--notify panel-->
+        <!--리소스 적용중-->
         <StackPanel x:Name="notifyPanel" 
                     HorizontalAlignment="Right" VerticalAlignment="Top">
             <StackPanel.Resources>

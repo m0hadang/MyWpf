@@ -1,7 +1,8 @@
-﻿using System;
+﻿using Notification.Helper;
+using System;
 using System.Windows;
 
-namespace Notification.Src
+namespace Notification.TriggerSrc
 {
     public class TriggerActionCollection : AttachableCollection<TriggerAction>
     {

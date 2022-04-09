@@ -1,6 +1,7 @@
-﻿using System.Windows;
+﻿using Notification.Helper;
+using System.Windows;
 
-namespace Notification.Src
+namespace Notification.TriggerSrc
 {
     public sealed class TriggerCollection : AttachableCollection<TriggerBase>
     {

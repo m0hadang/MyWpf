@@ -2,7 +2,7 @@
 using System.Globalization;
 using System.Resources;
 
-namespace Notification.Src
+namespace Notification.Helper
 {
     internal class ExceptionStringTable
     {

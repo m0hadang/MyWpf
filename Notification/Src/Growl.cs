@@ -186,9 +186,12 @@ namespace Notification.Src
         public static readonly DependencyProperty TypeProperty = DependencyProperty.Register(
             "Type", typeof(InfoType), typeof(Growl), new PropertyMetadata(default(InfoType)));
 
+        //Attach Property
         public static readonly DependencyProperty GrowlParentProperty = DependencyProperty.RegisterAttached(
             "GrowlParent", typeof(bool), typeof(Growl), new PropertyMetadata(ValueBoxes.FalseBox, (o, args) =>
             {
+                //true로 설정되면 true로 설정한 자식 element가 o 로 전달됨
+                //o 로 전달되는 property는 SetGrowlParent를 통해 전달한 StackPanel
                 if ((bool)args.NewValue && o is Panel panel)
                 {
                     SetGrowlPanel(panel);
@@ -219,9 +222,23 @@ namespace Notification.Src
         public static string GetToken(DependencyObject element)
             => (string)element.GetValue(TokenProperty);
 
-        public static void SetGrowlParent(DependencyObject element, bool value) => element.SetValue(GrowlParentProperty, ValueBoxes.BooleanBox(value));
+        /* 
+         * 전달된 element의 DependencyProperty 속성을 설정
+         * 
+         * Button button = new Button();
+         * button.Content = "button";
+         * DockPanel dockPanel = new DockPanel(); 
+         * dockPanel.Children.Add(button); 
+         * button.SetValue(DockPanel.DockProperty, Dock.Top);
+         * 
+         * GrowlParentProperty는 Attach Property라서 element에 Attach됨
+         * element의 GrowlParent Property 값을 value로 설정한 것과 같음
+         */
+        public static void SetGrowlParent(DependencyObject element, bool value)
+            => element.SetValue(GrowlParentProperty, ValueBoxes.BooleanBox(value));
 
-        public static bool GetGrowlParent(DependencyObject element) => (bool)element.GetValue(GrowlParentProperty);
+        public static bool GetGrowlParent(DependencyObject element)
+            => (bool)element.GetValue(GrowlParentProperty);
 
         public InfoType Type
         {
@@ -306,23 +323,24 @@ namespace Notification.Src
             _timerClose.Start();
         }
 
-        /// <summary>
-        ///     消息容器
-        /// </summary>
-        /// <param name="panel"></param>
         private static void SetGrowlPanel(Panel panel)
         {
             GrowlPanel = panel;
             InitGrowlPanel(panel);
         }
 
+        //패널을 초기화
         private static void InitGrowlPanel(Panel panel)
         {
             if (panel == null) return;
 
+            //Clear라는 MenuItem 추가
             var menuItem = new MenuItem();
             menuItem.Header = "Clear";
 
+            //MenuItem 클릭하였을때 자식 Element에서 Growl라는 Element들을 모두 찾아서 Close 호출
+            //이 코드로 보아 StackPanel에 Growl가 자식으로서 추가된다.
+            //Growl가 보이는 것은 이 Panel에 Growl가 추가됨으로서 보이는 것이다.
             menuItem.Click += (s, e) =>
             {
                 foreach (var item in panel.Children.OfType<Growl>())
@@ -330,6 +348,7 @@ namespace Notification.Src
                     item.Close();
                 }
             };
+            //Panel의 ContextMenu
             panel.ContextMenu = new ContextMenu
             {
                 Items =
@@ -337,12 +356,13 @@ namespace Notification.Src
                     menuItem
                 }
             };
-
+            //리소스를 가져옴
             var res = ResourceHelper.GetResourceDic(
                 "/BehaviorXaml/Behaviors.xaml");
-
+            //리소스 안에 BehaviorXY400 라는 Behavior가 있는지 검색
             if (res.Contains(ResourceToken.BehaviorXY400))
             {
+                //있으면 BehaviorXY400 Behavior를 panel에 설정 
                 PanelElement.SetFluidMoveBehavior(panel, res[ResourceToken.BehaviorXY400] as FluidMoveBehavior);
             }
         }

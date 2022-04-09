@@ -1,8 +1,10 @@
-﻿using System;
+﻿using Notification.Helper;
+using Notification.TriggerSrc;
+using System;
 using System.Collections;
 using System.Globalization;
 
-namespace Notification.Src
+namespace Notification.TriggerSrc
 {
     [AttributeUsage(AttributeTargets.Property | AttributeTargets.Class, AllowMultiple = true)]
     public sealed class DefaultTriggerAttribute : Attribute

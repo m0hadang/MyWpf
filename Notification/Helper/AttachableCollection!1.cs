@@ -5,7 +5,7 @@ using System.ComponentModel;
 using System.Globalization;
 using System.Windows;
 
-namespace Notification.Src
+namespace Notification.Helper
 {
     public abstract class AttachableCollection<T> : FreezableCollection<T>, IAttachedObject
                 where T : DependencyObject, IAttachedObject

@@ -1,6 +1,6 @@
 ﻿using System.Windows;
 
-namespace Notification.Src
+namespace Notification.Helper
 {
     public interface IAttachedObject
     {

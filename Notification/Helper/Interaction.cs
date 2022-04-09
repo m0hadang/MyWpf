@@ -1,9 +1,10 @@
-﻿using Notification.BehaviorSrc;
-using System;
+﻿using System;
 using System.Windows;
+using Notification.TriggerSrc;
+using TriggerCollection = Notification.TriggerSrc.TriggerCollection;
+using BehaviorCollection = Notification.BehaviorSrc.BehaviorCollection;
 
-
-namespace Notification.Src
+namespace Notification.Helper
 {
     public static class Interaction
     {

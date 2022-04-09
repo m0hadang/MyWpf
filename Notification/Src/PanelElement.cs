@@ -1,4 +1,5 @@
 ﻿using Notification.BehaviorSrc;
+using Notification.Helper;
 using System.Windows;
 using System.Windows.Controls;
 
@@ -21,7 +22,7 @@ namespace Notification.Src
                 if (e.NewValue is FluidMoveBehavior behavior)
                 {
                     collection.ItemAdded(behavior);
-                    SetTempFluidMoveBehavior(panel, behavior);
+                    SetTempFluidMoveBehavior(panel, behavior);//panel에 새로운 Behavior 추가
                 }
             }
         }
