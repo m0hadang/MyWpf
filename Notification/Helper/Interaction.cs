@@ -29,11 +29,14 @@ namespace Notification.Helper
             return triggerCollection;
         }
 
+        // StackPanel 전달됨
         public static BehaviorCollection GetBehaviors(DependencyObject obj)
         {
+            // StackPanel에 ShadowBehaviors Property 반환
             var behaviorCollection = (BehaviorCollection)obj.GetValue(BehaviorsProperty);
             if (behaviorCollection == null)
             {
+                // StackPanel에 ShadowBehaviors 설정 안되어 있으면 ShadowBehaviors 설정
                 behaviorCollection = new BehaviorCollection();
                 obj.SetValue(BehaviorsProperty, behaviorCollection);
             }

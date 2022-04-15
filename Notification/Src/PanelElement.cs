@@ -27,6 +27,7 @@ namespace Notification.Src
             }
         }
 
+        //element의 FluidMoveBehavior Property값 설정
         public static void SetFluidMoveBehavior(DependencyObject element, FluidMoveBehavior value)
             => element.SetValue(FluidMoveBehaviorProperty, value);
 

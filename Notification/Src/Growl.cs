@@ -123,11 +123,12 @@ namespace Notification.Src
 
             _buttonClose.Collapse();
         }
-
+        //Growl를 StackPanel에 추가하면 UI 다시 그리기 위해 호출
         public override void OnApplyTemplate()
         {
             base.OnApplyTemplate();
 
+            //Template에서 Element를 검색해서 가져옴
             _panelMore = GetTemplateChild(ElementPanelMore) as Panel;
             _gridMain = GetTemplateChild(ElementGridMain) as Grid;
             _buttonClose = GetTemplateChild(ElementButtonClose) as Button;
@@ -289,6 +290,7 @@ namespace Notification.Src
             set => SetValue(IconBrushProperty, value);
         }
 
+        //일정 시간 후 Growl가 닫히도록 Timer 설정
         private void StartTimer()
         {
             _timerClose = new DispatcherTimer
@@ -309,13 +311,14 @@ namespace Notification.Src
             _timerClose.Start();
         }
 
+        //static 메서드, 한번만 호출
         private static void SetGrowlPanel(Panel panel)
         {
-            GrowlPanel = panel;
+            GrowlPanel = panel;//GrowlPanel는 static 변수, 한번만 설정됨, 모든 Growl이 공유
             InitGrowlPanel(panel);
         }
 
-        //패널을 초기화
+        //static 메서드, 한번만 호출, 패널을 초기화
         private static void InitGrowlPanel(Panel panel)
         {
             if (panel == null) return;
@@ -348,11 +351,13 @@ namespace Notification.Src
             //리소스 안에 BehaviorXY400 라는 Behavior가 있는지 검색
             if (res.Contains(ResourceToken.BehaviorXY400))
             {
-                //있으면 BehaviorXY400 Behavior를 panel에 설정 
+                //있으면 BehaviorXY400 Behavior를 panel에 설정
+                //ShadowBehaviors, FluidMoveBehavior 를 StackPanel에 설정
                 PanelElement.SetFluidMoveBehavior(panel, res[ResourceToken.BehaviorXY400] as FluidMoveBehavior);
             }
         }
 
+        //UI 업데이트
         private void Update()
         {
             if (Type == InfoType.Ask)
@@ -361,6 +366,7 @@ namespace Notification.Src
                 _panelMore.Show();
             }
 
+            //애니메이션 실행
             var transform = new TranslateTransform
             {
                 X = MaxWidth
@@ -370,6 +376,8 @@ namespace Notification.Src
             if (!_staysOpen) StartTimer();
         }
 
+        //growlInfo 객체로 Growl 객체 초기화
+        //생성된 Growl을 GrowlPanel(StackPanel)에 추가
         private static void Show(GrowlInfo growlInfo)
         {
             Application.Current.Dispatcher?.Invoke(
@@ -378,6 +386,7 @@ namespace Notification.Src
 #endif
                     () =>
                     {
+                        //생성된 Growl 객체는 GrowlPanel에 추가
                         var ctl = new Growl
                         {
                             Message = growlInfo.Message,
@@ -413,6 +422,9 @@ namespace Notification.Src
             );
         }
 
+        //Growl를 화면에 출력하기 전에 호출, 사전 작업
+        //growlInfo는 클라이언트 코드에서 호출할때 생성해서 전달
+        //growlInfo에 추가적인 정보 설정
         private static void InitGrowlInfo(ref GrowlInfo growlInfo, InfoType infoType)
         {
             if (growlInfo == null) throw new ArgumentNullException(nameof(growlInfo));
@@ -632,6 +644,7 @@ namespace Notification.Src
 
         private void ButtonClose_OnClick(object sender, RoutedEventArgs e) => Close();
 
+        //Animation을 이용하여 닫힘 효과 표시
         private void Close(bool invokeActionBeforeClose = false, bool invokeParam = true)
         {
             if (invokeActionBeforeClose)
