@@ -4,16 +4,16 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{BAFDBA2C-34DA-4D1F-A57C-69E4D9B9488A}</ProjectGuid>
+    <ProjectGuid>{D5F9ED24-B5F7-4377-BD62-D393FC721ACE}</ProjectGuid>
     <OutputType>WinExe</OutputType>
-    <RootNamespace>MyWpf</RootNamespace>
-    <AssemblyName>MyWpf</AssemblyName>
+    <RootNamespace>NumericUpDown</RootNamespace>
+    <AssemblyName>NumericUpDown</AssemblyName>
     <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <ProjectTypeGuids>{60dc8134-eba5-43b8-bcc9-bb4bc16c2548};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
     <WarningLevel>4</WarningLevel>
+    <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
     <Deterministic>true</Deterministic>
-    <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <PlatformTarget>AnyCPU</PlatformTarget>
@@ -55,35 +55,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
-    <Compile Include="Src\AdornerContainer.cs" />
-    <Compile Include="Src\AnimationHelper.cs" />
-    <Compile Include="Src\AttachableCollection!1.cs" />
-    <Compile Include="Src\DefaultTriggerAttribute.cs" />
-    <Compile Include="Src\ExceptionStringTable.cs" />
-    <Compile Include="Src\ExtendedVisualStateManager.cs" />
-    <Compile Include="Src\Growl.cs" />
-    <Compile Include="Src\GrowlInfo.cs" />
-    <Compile Include="Src\IAttachedObject.cs" />
-    <Compile Include="Src\Interaction.cs" />
-    <Compile Include="Src\PanelElement.cs" />
-    <Compile Include="Src\PreviewInvokeEventArgs.cs" />
-    <Compile Include="Src\RegexPatterns.cs" />
-    <Compile Include="Src\ResourceHelper.cs" />
-    <Compile Include="Src\ResourceToken.cs" />
-    <Compile Include="Src\StringExtension.cs" />
-    <Compile Include="Src\TransitionEffect.cs" />
-    <Compile Include="Src\TriggerAction.cs" />
-    <Compile Include="Src\TriggerActionCollection.cs" />
-    <Compile Include="Src\TriggerBase.cs" />
-    <Compile Include="Src\TriggerCollection.cs" />
-    <Compile Include="Src\UIElementExtension.cs" />
-    <Compile Include="UIControl\BackgroundSwitchElement.cs" />
-    <Compile Include="UIControl\BorderCircularConverter.cs" />
-    <Compile Include="UIControl\BorderElement.cs" />
-    <Compile Include="UIControl\ControlCommands.cs" />
-    <Compile Include="UIControl\ValueBoxes.cs" />
-    <Compile Include="ValueConverter\Boolean2VisibilityConverter.cs" />
-    <Page Include="BehaviorXaml\Behaviors.xaml">
+    <Page Include="CustomControl\Generic.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
@@ -95,19 +67,11 @@
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="BehaviorSrc\Behavior!1.cs" />
-    <Compile Include="BehaviorSrc\Behavior.cs" />
-    <Compile Include="BehaviorSrc\BehaviorCollection.cs" />
-    <Compile Include="BehaviorSrc\FluidMoveBehavior.cs" />
-    <Compile Include="BehaviorSrc\FluidMoveBehaviorBase.cs" />
+    <Compile Include="CustomControl\NumericUpDownCtl.cs" />
     <Compile Include="MainWindow.xaml.cs">
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
-    <Page Include="Styles\StlGrowl.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs">
@@ -131,17 +95,10 @@
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
     </None>
-    <Resource Include="Resource\Fonts\SpoqaHanSansNeo-Regular.ttf" />
-    <Resource Include="Resource\Fonts\SpoqaHanSansNeo-Medium.ttf" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
   </ItemGroup>
-  <ItemGroup>
-    <Resource Include="Resource\Image\check.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="Resource\Image\warning.png" />
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

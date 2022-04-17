@@ -58,6 +58,11 @@ namespace Notification.Src
 
         public Growl()
         {
+            //Binding 설정
+            //Growl Control에 XAML이 있다면 다음과 같은 모습일 것이다.
+            /*
+             * <Button Command="{Binding Close}"/>
+             */
             CommandBindings.Add(new CommandBinding(ControlCommands.Close, ButtonClose_OnClick));
             CommandBindings.Add(new CommandBinding(ControlCommands.Cancel, ButtonCancel_OnClick));
             CommandBindings.Add(new CommandBinding(ControlCommands.Confirm, ButtonOk_OnClick));
@@ -642,7 +647,6 @@ namespace Notification.Src
             Show(growlInfo);
         }
 
-        private void ButtonClose_OnClick(object sender, RoutedEventArgs e) => Close();
 
         //Animation을 이용하여 닫힘 효과 표시
         private void Close(bool invokeActionBeforeClose = false, bool invokeParam = true)
@@ -691,9 +695,8 @@ namespace Notification.Src
                 panel.ContextMenu.Opacity = 1;
             }
         }
-
+        private void ButtonClose_OnClick(object sender, RoutedEventArgs e) => Close();
         private void ButtonCancel_OnClick(object sender, RoutedEventArgs e) => Close(true, false);
-
         private void ButtonOk_OnClick(object sender, RoutedEventArgs e) => Close(true);
     }
 }

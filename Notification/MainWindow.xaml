@@ -4,6 +4,7 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:src="clr-namespace:Notification.Src"
+        xmlns:uicon="clr-namespace:Notification.UIControl"
         xmlns:local="clr-namespace:Notification"
         mc:Ignorable="d"
         Title="MainWindow" Height="450" Width="800"
@@ -17,7 +18,8 @@
     </Window.Resources>
     <Grid>
         <Button Content="Notify" Width="200" Height="100" Click="Button_Click"/>
-        
+        <Button Content="Test" Width="200" Height="100" HorizontalAlignment="Right"
+                Command="uicon:ControlCommands.Close"/>
         <!--notify panel-->
         <!--리소스 적용중-->
         <StackPanel x:Name="notifyPanel" 

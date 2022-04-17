@@ -31,7 +31,9 @@
         <Setter Property="FocusVisualStyle" Value="{StaticResource FocusVisual}"/>
     </Style>
 
-    <Style x:Key="ButtonCustom" BasedOn="{StaticResource BaseStyle}" TargetType="Button">
+    <Style x:Key="ButtonCustom" 
+           BasedOn="{StaticResource BaseStyle}" 
+           TargetType="Button">
         <Setter Property="Background" Value="{x:Null}"/>
         <Setter Property="HorizontalContentAlignment" Value="Center"/>
         <Setter Property="VerticalContentAlignment" Value="Center"/>
@@ -40,17 +42,33 @@
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="Button">
-                    <Border x:Name="Chrome" CornerRadius="{Binding Path=(uicon:BorderElement.CornerRadius),RelativeSource={RelativeSource TemplatedParent}}" SnapsToDevicePixels="true" BorderThickness="{TemplateBinding BorderThickness}" BorderBrush="{TemplateBinding BorderBrush}" Background="{TemplateBinding Background}">
-                        <ContentPresenter Margin="{TemplateBinding Padding}" HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}" VerticalAlignment="{TemplateBinding VerticalContentAlignment}" RecognizesAccessKey="True" SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}"/>
+                    <!--BorderElement.CornerRadius는 Attached Property라서 TemplatedParent에 해당하는 Element에서 CornerRadius 속성을 선언하지 않아도
+                    CornerRadius 속성을 가질 수 있게됨
+                    TemplatedParent 는 TemplateBinding처럼 이 Template이 적용된 Control의 속성과 바인딩 하기 위해서 사용한다.
+                    -->
+                    
+                    <Border x:Name="Chrome" 
+                            CornerRadius="{Binding Path=(uicon:BorderElement.CornerRadius), RelativeSource={RelativeSource TemplatedParent}}" 
+                            SnapsToDevicePixels="true" 
+                            BorderThickness="{TemplateBinding BorderThickness}" 
+                            BorderBrush="{TemplateBinding BorderBrush}" 
+                            Background="{TemplateBinding Background}">
+                        <ContentPresenter Margin="{TemplateBinding Padding}" 
+                                          RecognizesAccessKey="True" 
+                                          HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}" 
+                                          VerticalAlignment="{TemplateBinding VerticalContentAlignment}" 
+                                          SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}"/>
                     </Border>
                     <ControlTemplate.Triggers>
                         <Trigger Property="IsMouseOver" Value="True">
                             <Setter Property="Opacity" Value=".9"/>
-                            <Setter Property="Background" TargetName="Chrome" Value="{Binding Path=(uicon:BackgroundSwitchElement.MouseHoverBackground),RelativeSource={RelativeSource TemplatedParent}}"/>
+                            <Setter Property="Background" 
+                                    TargetName="Chrome" Value="{Binding Path=(uicon:BackgroundSwitchElement.MouseHoverBackground),RelativeSource={RelativeSource TemplatedParent}}"/>
                         </Trigger>
                         <Trigger Property="IsPressed" Value="True">
                             <Setter Property="Opacity" Value=".6"/>
-                            <Setter Property="Background" TargetName="Chrome" Value="{Binding Path=(uicon:BackgroundSwitchElement.MouseDownBackground),RelativeSource={RelativeSource TemplatedParent}}"/>
+                            <Setter Property="Background" 
+                                    TargetName="Chrome" Value="{Binding Path=(uicon:BackgroundSwitchElement.MouseDownBackground),RelativeSource={RelativeSource TemplatedParent}}"/>
                         </Trigger>
                         <Trigger Property="IsEnabled" Value="False">
                             <Setter Property="Opacity" Value="0.4"/>
@@ -68,6 +86,9 @@
         <Setter Property="Width" Value="300"/>
         <Setter Property="Margin" Value="10,0,0,10"/>
         <Setter Property="MaxWidth" Value="320"/>
+        <!--Attached Property 설정
+        ControlTemplate 트리 안에 있는 Element에서 uicon:BorderElement.CornerRadius를 사용하면 
+        여기서 설정한 값(8)을 가져온다-->
         <Setter Property="uicon:BorderElement.CornerRadius" Value="8"/>
         <Setter Property="Background" Value="White"/>
         <Setter Property="Template">
@@ -88,12 +109,10 @@
                             <RowDefinition/>
                             <RowDefinition Height="Auto"/>
                         </Grid.RowDefinitions>
-                        <Border Grid.ColumnSpan="3" Grid.RowSpan="2" Effect="{StaticResource EffectShadow2}" Background="{TemplateBinding Background}" 
-                                CornerRadius="{Binding Path=(uicon:BorderElement.CornerRadius),RelativeSource={RelativeSource TemplatedParent}}"/>
-
-                        <!--<Path Grid.Row="0" Grid.Column="0" VerticalAlignment="Top" Margin="0,15,0,0" Width="30" Height="30" 
-                            Data="{TemplateBinding Icon}" Stretch="Uniform" Fill="{TemplateBinding IconBrush}"/>-->
-
+                        <Border CornerRadius="{Binding Path=(uicon:BorderElement.CornerRadius), RelativeSource={RelativeSource TemplatedParent}}"
+                                Grid.ColumnSpan="3" Grid.RowSpan="2"
+                                Effect="{StaticResource EffectShadow2}" 
+                                Background="{TemplateBinding Background}"/>
                         <Image Grid.Row="0" Grid.Column="0" VerticalAlignment="Center" Width="20" Height="20" Stretch="Uniform">
                             <Image.Style>
                                 <Style TargetType="Image">
@@ -119,15 +138,26 @@
                         </StackPanel>
 
                         <!--Close Button-->
-                        <Button Grid.Row="0" Visibility="Collapsed" Margin="11,0" Name="PART_ButtonClose" Command="uicon:ControlCommands.Close" Grid.Column="2" Background="Transparent" Style="{StaticResource ButtonCustom}" VerticalAlignment="Center" HorizontalAlignment="Center" Width="18" Height="18">
-                            <Path Data="{StaticResource ErrorGeometry}" Stretch="Uniform" Fill="Red"/>
+                        <Button Grid.Row="0" 
+                                Name="PART_ButtonClose"
+                                Command="uicon:ControlCommands.Close" Style="{StaticResource ButtonCustom}" 
+                                Visibility="Collapsed" Margin="11,0" 
+                                Grid.Column="2" Background="Transparent" 
+                                VerticalAlignment="Center" HorizontalAlignment="Center" Width="18" Height="18">
+                            <Path Data="{StaticResource ErrorGeometry}" Stretch="Uniform" Fill="Tomato"/>
                         </Button>
                         <UniformGrid Columns="2" Name="PART_PanelMore" IsEnabled="False" Visibility="Collapsed" Grid.Row="1" Grid.ColumnSpan="3" Height="28" Grid.Column="0">
-                            <Button Command="uicon:ControlCommands.Cancel" Style="{StaticResource ButtonCustom}" HorizontalAlignment="Stretch" Background="Transparent">
-                                <TextBlock Text="{Binding CancelStr,RelativeSource={RelativeSource TemplatedParent}}" HorizontalAlignment="Center" Foreground="Orange"/>
+                            <Button Command="uicon:ControlCommands.Cancel" 
+                                    Style="{StaticResource ButtonCustom}" 
+                                    HorizontalAlignment="Stretch" Background="Transparent">
+                                <TextBlock Text="{Binding CancelStr,RelativeSource={RelativeSource TemplatedParent}}" 
+                                           HorizontalAlignment="Center" Foreground="Orange"/>
                             </Button>
-                            <Button Command="uicon:ControlCommands.Confirm" Style="{StaticResource ButtonCustom}" HorizontalAlignment="Stretch" Background="Transparent">
-                                <TextBlock Text="{Binding ConfirmStr,RelativeSource={RelativeSource TemplatedParent}}" HorizontalAlignment="Center" Foreground="Green"/>
+                            <Button Command="uicon:ControlCommands.Confirm" 
+                                    Style="{StaticResource ButtonCustom}" 
+                                    HorizontalAlignment="Stretch" Background="Transparent">
+                                <TextBlock Text="{Binding ConfirmStr,RelativeSource={RelativeSource TemplatedParent}}" 
+                                           HorizontalAlignment="Center" Foreground="Green"/>
                             </Button>
                         </UniformGrid>
                     </Grid>

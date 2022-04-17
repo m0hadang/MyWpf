@@ -1,6 +1,7 @@
-﻿using System.Windows;
+﻿using NumericUpDown.CustomControl;
+using System.Windows;
 
-namespace MyWpf
+namespace NumericUpDown
 {
     /// <summary>
     /// Interaction logic for MainWindow.xaml
@@ -10,6 +11,11 @@ namespace MyWpf
         public MainWindow()
         {
             InitializeComponent();
+        }
+
+        private void NumericUpDownCtl_ValueChanged(object sender, ValueChangedEventArgs e)
+        {
+
         }
     }
 }
