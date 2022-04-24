@@ -15,7 +15,7 @@ namespace NumericUpDown.CustomControl
         public ValueChangedEventArgs(RoutedEvent id, int num)
         {
             _Value = num;
-            RoutedEvent = id;//발생되는 Event 정보 설정
+            RoutedEvent = id;//발생되는 Event 정보 설정(필수)
         }
     }
 

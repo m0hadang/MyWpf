@@ -36,8 +36,6 @@ namespace Notification.Src
 
         #region Data
 
-        //private static GrowlWindow GrowlWindow;
-
         private Panel _panelMore;
 
         private Grid _gridMain;
@@ -50,14 +48,8 @@ namespace Notification.Src
 
         private int _waitTime = 6;
 
-        /// <summary>
-        ///     计数
-        /// </summary>
         private int _tickCount;
 
-        /// <summary>
-        ///     关闭计时器
-        /// </summary>
         private DispatcherTimer _timerClose;
 
         private static readonly Dictionary<string, Panel> PanelDic = new Dictionary<string, Panel>();
@@ -66,7 +58,10 @@ namespace Notification.Src
 
         public Growl()
         {
-            CommandBindings.Add(new CommandBinding(ControlCommands.Close, ButtonClose_OnClick));
+            //Binding 설정
+            CommandBindings.Add( // 1. binding을 추가하는데
+                new CommandBinding(ControlCommands.Close, ButtonClose_OnClick) // 2. binding은 다음과 같다
+            ); // 3. 이렇게 CommandBindings 안에 CommandBinding을 추가하면 UIElement의 Command 속성에 ControlCommands.Close을 할당할 수 있다.
             CommandBindings.Add(new CommandBinding(ControlCommands.Cancel, ButtonCancel_OnClick));
             CommandBindings.Add(new CommandBinding(ControlCommands.Confirm, ButtonOk_OnClick));
         }
@@ -131,11 +126,12 @@ namespace Notification.Src
 
             _buttonClose.Collapse();
         }
-
+        //Growl를 StackPanel에 추가하면 UI 다시 그리기 위해 호출
         public override void OnApplyTemplate()
         {
             base.OnApplyTemplate();
 
+            //Template에서 Element를 검색해서 가져옴
             _panelMore = GetTemplateChild(ElementPanelMore) as Panel;
             _gridMain = GetTemplateChild(ElementGridMain) as Grid;
             _buttonClose = GetTemplateChild(ElementButtonClose) as Button;
@@ -151,9 +147,6 @@ namespace Notification.Src
 
         private Func<bool, bool> ActionBeforeClose { get; set; }
 
-        /// <summary>
-        ///     消息容器
-        /// </summary>
         public static Panel GrowlPanel { get; set; }
 
         internal static readonly DependencyProperty CancelStrProperty = DependencyProperty.Register(
@@ -186,10 +179,12 @@ namespace Notification.Src
         public static readonly DependencyProperty TypeProperty = DependencyProperty.Register(
             "Type", typeof(InfoType), typeof(Growl), new PropertyMetadata(default(InfoType)));
 
-        //Attach Property, true로 설정되면 Growl Panel에 설정
+        //Attach Property
         public static readonly DependencyProperty GrowlParentProperty = DependencyProperty.RegisterAttached(
             "GrowlParent", typeof(bool), typeof(Growl), new PropertyMetadata(ValueBoxes.FalseBox, (o, args) =>
             {
+                //true로 설정되면 true로 설정한 자식 element가 o 로 전달됨
+                //o 로 전달되는 property는 SetGrowlParent를 통해 전달한 StackPanel
                 if ((bool)args.NewValue && o is Panel panel)
                 {
                     SetGrowlPanel(panel);
@@ -220,9 +215,25 @@ namespace Notification.Src
         public static string GetToken(DependencyObject element)
             => (string)element.GetValue(TokenProperty);
 
-        public static void SetGrowlParent(DependencyObject element, bool value) => element.SetValue(GrowlParentProperty, ValueBoxes.BooleanBox(value));
+        /* 
+         * 전달된 element의 DependencyProperty 속성을 설정
+         * 
+         * Button button = new Button();
+         * button.Content = "button";
+         * DockPanel dockPanel = new DockPanel(); 
+         * dockPanel.Children.Add(button); 
+         * button.SetValue(DockPanel.DockProperty, Dock.Top);
+         * 
+         * GrowlParentProperty는 Attach Property라서 element에 Attach됨
+         * element의 GrowlParent Property 값을 value로 설정한 것과 같음
+         * 
+         * ?? 왜 static으로 StackPanel을 설정하지 않는 걸까??
+         */
+        public static void SetGrowlParent(DependencyObject element, bool value)
+            => element.SetValue(GrowlParentProperty, ValueBoxes.BooleanBox(value));
 
-        public static bool GetGrowlParent(DependencyObject element) => (bool)element.GetValue(GrowlParentProperty);
+        public static bool GetGrowlParent(DependencyObject element)
+            => (bool)element.GetValue(GrowlParentProperty);
 
         public InfoType Type
         {
@@ -284,9 +295,7 @@ namespace Notification.Src
             set => SetValue(IconBrushProperty, value);
         }
 
-        /// <summary>
-        ///     开始计时器
-        /// </summary>
+        //일정 시간 후 Growl가 닫히도록 Timer 설정
         private void StartTimer()
         {
             _timerClose = new DispatcherTimer
@@ -307,23 +316,25 @@ namespace Notification.Src
             _timerClose.Start();
         }
 
-        /// <summary>
-        ///     消息容器
-        /// </summary>
-        /// <param name="panel"></param>
+        //static 메서드, 한번만 호출
         private static void SetGrowlPanel(Panel panel)
         {
-            GrowlPanel = panel;
+            GrowlPanel = panel;//GrowlPanel는 static 변수, 한번만 설정됨, 모든 Growl이 공유
             InitGrowlPanel(panel);
         }
 
+        //static 메서드, 한번만 호출, 패널을 초기화
         private static void InitGrowlPanel(Panel panel)
         {
             if (panel == null) return;
 
+            //Clear라는 MenuItem 추가
             var menuItem = new MenuItem();
             menuItem.Header = "Clear";
 
+            //MenuItem 클릭하였을때 자식 Element에서 Growl라는 Element들을 모두 찾아서 Close 호출
+            //이 코드로 보아 StackPanel에 Growl가 자식으로서 추가된다.
+            //Growl가 보이는 것은 이 Panel에 Growl가 추가됨으로서 보이는 것이다.
             menuItem.Click += (s, e) =>
             {
                 foreach (var item in panel.Children.OfType<Growl>())
@@ -331,6 +342,7 @@ namespace Notification.Src
                     item.Close();
                 }
             };
+            //Panel의 ContextMenu
             panel.ContextMenu = new ContextMenu
             {
                 Items =
@@ -338,16 +350,19 @@ namespace Notification.Src
                     menuItem
                 }
             };
-
+            //리소스를 가져옴
             var res = ResourceHelper.GetResourceDic(
                 "/BehaviorXaml/Behaviors.xaml");
-
+            //리소스 안에 BehaviorXY400 라는 Behavior가 있는지 검색
             if (res.Contains(ResourceToken.BehaviorXY400))
             {
+                //있으면 BehaviorXY400 Behavior를 panel에 설정
+                //ShadowBehaviors, FluidMoveBehavior 를 StackPanel에 설정
                 PanelElement.SetFluidMoveBehavior(panel, res[ResourceToken.BehaviorXY400] as FluidMoveBehavior);
             }
         }
 
+        //UI 업데이트
         private void Update()
         {
             if (Type == InfoType.Ask)
@@ -356,6 +371,7 @@ namespace Notification.Src
                 _panelMore.Show();
             }
 
+            //애니메이션 실행
             var transform = new TranslateTransform
             {
                 X = MaxWidth
@@ -365,10 +381,8 @@ namespace Notification.Src
             if (!_staysOpen) StartTimer();
         }
 
-        /// <summary>
-        ///     显示信息
-        /// </summary>
-        /// <param name="growlInfo"></param>
+        //growlInfo 객체로 Growl 객체 초기화
+        //생성된 Growl을 GrowlPanel(StackPanel)에 추가
         private static void Show(GrowlInfo growlInfo)
         {
             Application.Current.Dispatcher?.Invoke(
@@ -377,6 +391,7 @@ namespace Notification.Src
 #endif
                     () =>
                     {
+                        //생성된 Growl 객체는 GrowlPanel에 추가
                         var ctl = new Growl
                         {
                             Message = growlInfo.Message,
@@ -412,6 +427,9 @@ namespace Notification.Src
             );
         }
 
+        //Growl를 화면에 출력하기 전에 호출, 사전 작업
+        //growlInfo는 클라이언트 코드에서 호출할때 생성해서 전달
+        //growlInfo에 추가적인 정보 설정
         private static void InitGrowlInfo(ref GrowlInfo growlInfo, InfoType infoType)
         {
             if (growlInfo == null) throw new ArgumentNullException(nameof(growlInfo));
@@ -455,7 +473,6 @@ namespace Notification.Src
                         {
                             growlInfo.IconBrushKey = ResourceToken.InfoBrush;
                         }
-
                     }
                     break;
                 case InfoType.Warning:
@@ -556,117 +573,66 @@ namespace Notification.Src
             }
         }
 
-        /// <summary>
-        ///     成功
-        /// </summary>
-        /// <param name="message"></param>
-        /// <param name="token"></param>
         public static void Success(string message, string token = "") => Success(new GrowlInfo
         {
             Message = message,
             Token = token
         });
 
-        /// <summary>
-        ///     成功
-        /// </summary>
-        /// <param name="growlInfo"></param>
         public static void Success(GrowlInfo growlInfo)
         {
             InitGrowlInfo(ref growlInfo, InfoType.Success);
             Show(growlInfo);
         }
 
-        /// <summary>
-        ///     消息
-        /// </summary>
-        /// <param name="message"></param>
-        /// <param name="token"></param>
         public static void Info(string message, string token = "") => Info(new GrowlInfo
         {
             Message = message,
             Token = token
         });
 
-        /// <summary>
-        ///     消息
-        /// </summary>
-        /// <param name="growlInfo"></param>
         public static void Info(GrowlInfo growlInfo)
         {
             InitGrowlInfo(ref growlInfo, InfoType.Info);
             Show(growlInfo);
         }
 
-        /// <summary>
-        ///     警告
-        /// </summary>
-        /// <param name="message"></param>
-        /// <param name="token"></param>
         public static void Warning(string message, string token = "") => Warning(new GrowlInfo
         {
             Message = message,
             Token = token
         });
 
-        /// <summary>
-        ///     警告
-        /// </summary>
-        /// <param name="growlInfo"></param>
         public static void Warning(GrowlInfo growlInfo)
         {
             InitGrowlInfo(ref growlInfo, InfoType.Warning);
             Show(growlInfo);
         }
 
-        /// <summary>
-        ///     错误
-        /// </summary>
-        /// <param name="message"></param>
-        /// <param name="token"></param>
         public static void Error(string message, string token = "") => Error(new GrowlInfo
         {
             Message = message,
             Token = token
         });
 
-        /// <summary>
-        ///     错误
-        /// </summary>
-        /// <param name="growlInfo"></param>
         public static void Error(GrowlInfo growlInfo)
         {
             InitGrowlInfo(ref growlInfo, InfoType.Error);
             Show(growlInfo);
         }
 
-        /// <summary>
-        ///     严重
-        /// </summary>
-        /// <param name="message"></param>
-        /// <param name="token"></param>
         public static void Fatal(string message, string token = "") => Fatal(new GrowlInfo
         {
             Message = message,
             Token = token
         });
 
-        /// <summary>
-        ///     严重
-        /// </summary>
-        /// <param name="growlInfo"></param>
         public static void Fatal(GrowlInfo growlInfo)
         {
             InitGrowlInfo(ref growlInfo, InfoType.Fatal);
             Show(growlInfo);
         }
 
-        /// <summary>
-        ///     询问
-        /// </summary>
-        /// <param name="message"></param>
-        /// <param name="actionBeforeClose"></param>
-        /// <param name="token"></param>
         public static void Ask(string message, Func<bool, bool> actionBeforeClose, string token = "") => Ask(new GrowlInfo
         {
             Message = message,
@@ -674,21 +640,14 @@ namespace Notification.Src
             Token = token
         });
 
-        /// <summary>
-        ///     询问
-        /// </summary>
-        /// <param name="growlInfo"></param>
         public static void Ask(GrowlInfo growlInfo)
         {
             InitGrowlInfo(ref growlInfo, InfoType.Ask);
             Show(growlInfo);
         }
 
-        private void ButtonClose_OnClick(object sender, RoutedEventArgs e) => Close();
 
-        /// <summary>
-        ///     关闭
-        /// </summary>
+        //Animation을 이용하여 닫힘 효과 표시
         private void Close(bool invokeActionBeforeClose = false, bool invokeParam = true)
         {
             if (invokeActionBeforeClose)
@@ -710,10 +669,6 @@ namespace Notification.Src
             transform.BeginAnimation(TranslateTransform.XProperty, animation);
         }
 
-        /// <summary>
-        ///     清除
-        /// </summary>
-        /// <param name="token"></param>
         public static void Clear(string token = "")
         {
             if (!string.IsNullOrEmpty(token))
@@ -729,10 +684,6 @@ namespace Notification.Src
             }
         }
 
-        /// <summary>
-        ///     清除
-        /// </summary>
-        /// <param name="panel"></param>
         private static void Clear(Panel panel)
         {
             if (panel == null) return;
@@ -743,9 +694,8 @@ namespace Notification.Src
                 panel.ContextMenu.Opacity = 1;
             }
         }
-
+        private void ButtonClose_OnClick(object sender, RoutedEventArgs e) => Close();
         private void ButtonCancel_OnClick(object sender, RoutedEventArgs e) => Close(true, false);
-
         private void ButtonOk_OnClick(object sender, RoutedEventArgs e) => Close(true);
     }
 }

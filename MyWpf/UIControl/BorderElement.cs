@@ -6,16 +6,25 @@ namespace Notification.UIControl
 {
     public class BorderElement
     {
+        //외부에 CornerRadius 속성을 붙여서 사용할 수 있도록 한다.
+        #region CornerRadius
         public static readonly DependencyProperty CornerRadiusProperty = DependencyProperty.RegisterAttached(
-            "CornerRadius", typeof(CornerRadius), typeof(BorderElement), new FrameworkPropertyMetadata(default(CornerRadius), FrameworkPropertyMetadataOptions.Inherits));
+            "CornerRadius", typeof(CornerRadius), typeof(BorderElement), 
+            new FrameworkPropertyMetadata(default(CornerRadius), FrameworkPropertyMetadataOptions.Inherits));
+        public static void SetCornerRadius(DependencyObject element, CornerRadius value) 
+            => element.SetValue(CornerRadiusProperty, value);
+        public static CornerRadius GetCornerRadius(DependencyObject element) 
+            => (CornerRadius)element.GetValue(CornerRadiusProperty);
+        #endregion
 
-        public static void SetCornerRadius(DependencyObject element, CornerRadius value) => element.SetValue(CornerRadiusProperty, value);
-
-        public static CornerRadius GetCornerRadius(DependencyObject element) => (CornerRadius)element.GetValue(CornerRadiusProperty);
-
+        #region Circular
         public static readonly DependencyProperty CircularProperty = DependencyProperty.RegisterAttached(
-            "Circular", typeof(bool), typeof(BorderElement), new PropertyMetadata(ValueBoxes.FalseBox, OnCircularChanged));
-
+            "Circular", typeof(bool), typeof(BorderElement), 
+            new PropertyMetadata(ValueBoxes.FalseBox, OnCircularChanged));
+        public static void SetCircular(DependencyObject element, bool value) 
+            => element.SetValue(CircularProperty, ValueBoxes.BooleanBox(value));
+        public static bool GetCircular(DependencyObject element)
+            => (bool)element.GetValue(CircularProperty);
         private static void OnCircularChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
             if (d is Border border)
@@ -38,12 +47,6 @@ namespace Notification.UIControl
                 }
             }
         }
-
-        public static void SetCircular(DependencyObject element, bool value)
-            => element.SetValue(CircularProperty, ValueBoxes.BooleanBox(value));
-
-        public static bool GetCircular(DependencyObject element)
-            => (bool)element.GetValue(CircularProperty);
+        #endregion
     }
-
 }

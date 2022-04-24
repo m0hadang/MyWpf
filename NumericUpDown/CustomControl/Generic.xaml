@@ -66,7 +66,7 @@
                                 <TextBlock Name="TextBlock"
                                            Width="60" TextAlignment="Right" Padding="5"
                                            Text="{Binding RelativeSource={RelativeSource FindAncestor, 
-                                                            AncestorType={x:Type local:NumericUpDownCtl}}, 
+                                                          AncestorType={x:Type local:NumericUpDownCtl}}, 
                                                           Path=Value}"/>
                             </Border>
 

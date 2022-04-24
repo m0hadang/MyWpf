@@ -1,5 +1,6 @@
-﻿using Notification.Src;
+﻿using MyNotification.Src;
 using System.Windows;
+using System.Windows.Input;
 
 namespace Notification
 {
@@ -13,7 +14,7 @@ namespace Notification
             InitializeComponent();
 
             //리소스 적용한 패널을 전달
-            Growl.SetGrowlParent(notifyPanel, true);
+            Growl.SetGrowlParent(notifyPanel);
         }
 
         private void Button_Click(object sender, RoutedEventArgs e)
@@ -23,6 +24,11 @@ namespace Notification
                 Message = "Message", 
                 Description = "Description" 
             });
+            //Growl.Success(new GrowlInfo
+            //{
+            //    Message = "No Message",
+            //    ShowDescription = false,
+            //});
         }
     }
 }

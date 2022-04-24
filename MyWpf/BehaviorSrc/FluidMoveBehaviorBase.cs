@@ -133,13 +133,13 @@ namespace Notification.BehaviorSrc
                 child = parent;
             }
         }
-
+        //AssociatedObject는 FrameworkElement
         protected override void OnAttached()
         {
             base.OnAttached();
             AssociatedObject.LayoutUpdated += AssociatedObject_LayoutUpdated;
         }
-
+        //AssociatedObject는 FrameworkElement
         protected override void OnDetaching()
         {
             base.OnDetaching();

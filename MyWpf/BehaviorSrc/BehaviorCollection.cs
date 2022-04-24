@@ -1,4 +1,5 @@
-﻿using Notification.Src;
+﻿using Notification.Helper;
+using Notification.Src;
 using System.Windows;
 
 namespace Notification.BehaviorSrc

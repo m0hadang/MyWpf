@@ -57,26 +57,21 @@
     </ApplicationDefinition>
     <Compile Include="Src\AdornerContainer.cs" />
     <Compile Include="Src\AnimationHelper.cs" />
-    <Compile Include="Src\AttachableCollection!1.cs" />
-    <Compile Include="Src\DefaultTriggerAttribute.cs" />
-    <Compile Include="Src\ExceptionStringTable.cs" />
     <Compile Include="Src\ExtendedVisualStateManager.cs" />
     <Compile Include="Src\Growl.cs" />
     <Compile Include="Src\GrowlInfo.cs" />
-    <Compile Include="Src\IAttachedObject.cs" />
-    <Compile Include="Src\Interaction.cs" />
     <Compile Include="Src\PanelElement.cs" />
-    <Compile Include="Src\PreviewInvokeEventArgs.cs" />
     <Compile Include="Src\RegexPatterns.cs" />
     <Compile Include="Src\ResourceHelper.cs" />
     <Compile Include="Src\ResourceToken.cs" />
     <Compile Include="Src\StringExtension.cs" />
-    <Compile Include="Src\TransitionEffect.cs" />
-    <Compile Include="Src\TriggerAction.cs" />
-    <Compile Include="Src\TriggerActionCollection.cs" />
-    <Compile Include="Src\TriggerBase.cs" />
-    <Compile Include="Src\TriggerCollection.cs" />
     <Compile Include="Src\UIElementExtension.cs" />
+    <Compile Include="TriggerSrc\DefaultTriggerAttribute.cs" />
+    <Compile Include="TriggerSrc\TransitionEffect.cs" />
+    <Compile Include="TriggerSrc\TriggerAction.cs" />
+    <Compile Include="TriggerSrc\TriggerActionCollection.cs" />
+    <Compile Include="TriggerSrc\TriggerBase.cs" />
+    <Compile Include="TriggerSrc\TriggerCollection.cs" />
     <Compile Include="UIControl\BackgroundSwitchElement.cs" />
     <Compile Include="UIControl\BorderCircularConverter.cs" />
     <Compile Include="UIControl\BorderElement.cs" />
@@ -100,6 +95,11 @@
     <Compile Include="BehaviorSrc\BehaviorCollection.cs" />
     <Compile Include="BehaviorSrc\FluidMoveBehavior.cs" />
     <Compile Include="BehaviorSrc\FluidMoveBehaviorBase.cs" />
+    <Compile Include="Helper\AttachableCollection!1.cs" />
+    <Compile Include="Helper\ExceptionStringTable.cs" />
+    <Compile Include="Helper\IAttachedObject.cs" />
+    <Compile Include="Helper\Interaction.cs" />
+    <Compile Include="Helper\PreviewInvokeEventArgs.cs" />
     <Compile Include="MainWindow.xaml.cs">
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
