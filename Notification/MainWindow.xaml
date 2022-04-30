@@ -19,7 +19,7 @@
         <StackPanel x:Name="notifyPanel" 
                     HorizontalAlignment="Right" VerticalAlignment="Top">
             <StackPanel.Resources>
-                <Style TargetType="mynotify:Growl" BasedOn="{StaticResource uniGrowl}"/>
+                <Style TargetType="mynotify:Growl" BasedOn="{StaticResource GrowlStyle}"/>
             </StackPanel.Resources>
         </StackPanel>        
     </Grid>

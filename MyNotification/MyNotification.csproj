@@ -48,6 +48,7 @@
     <Reference Include="PresentationFramework" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AnchorRefrence\Dumy.cs" />
     <Compile Include="Properties\AssemblyInfo.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -78,6 +79,15 @@
       <SubType>Designer</SubType>
     </Page>
   </ItemGroup>
-  <Import Project="..\MyCustomControlLib\MyCustomControlLib.projitems" Label="Shared" />
+  <ItemGroup>
+    <ProjectReference Include="..\MyCustomControl\MyCustomControl.csproj">
+      <Project>{c4dbe41e-d790-4f7f-9a80-e6e08886b608}</Project>
+      <Name>MyCustomControl</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\MyResource\MyResource.csproj">
+      <Project>{b67112cc-c4e6-4b9e-bc70-dcbcfce94b4a}</Project>
+      <Name>MyResource</Name>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

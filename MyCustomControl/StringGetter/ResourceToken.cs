@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace MyCustomControlLib.StringGetter
+namespace MyCustomControl.StringGetter
 {
     public class ResourceToken
     {

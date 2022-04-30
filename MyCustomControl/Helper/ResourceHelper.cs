@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Windows;
 
-namespace MyCustomControlLib.Helper
+namespace MyCustomControl.Helper
 {
     public class ResourceHelper
     {

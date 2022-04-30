@@ -1,15 +1,169 @@
 ﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                     xmlns:o="http://schemas.microsoft.com/winfx/2006/xaml/presentation/options"
+                    xmlns:attach="clr-namespace:MyCustomControl.Attache;assembly=MyCustomControl"
+                    xmlns:vc="clr-namespace:MyCustomControl.ValueConverter;assembly=MyCustomControl"
+                    xmlns:cmd="clr-namespace:MyCustomControl.Command;assembly=MyCustomControl"
                     xmlns:growl="clr-namespace:MyNotification.Src">
-    <Style x:Key="uniGrowl" TargetType="growl:Growl">
+    <!--Value Converter-->
+    <vc:Boolean2VisibilityConverter x:Key="Boolean2VisibilityConverter"/>
+
+    <!--DropShadowEffect-->
+    <Color x:Key="EffectShadowColor">#AA000000</Color>
+    <DropShadowEffect x:Key="EdgeShadow" BlurRadius="8" ShadowDepth="0.8" Direction="270" 
+                      Color="{StaticResource EffectShadowColor}" Opacity="0.08" 
+                      RenderingBias="Performance" o:Freeze="True"/>
+    <!--Image-->
+    <ImageSource x:Key="CheckImg">pack://application:,,,/MyResource;component/Img/check.png</ImageSource>
+    <ImageSource x:Key="WarningImg">pack://application:,,,/MyResource;component/Img/warning.png</ImageSource>
+
+    <!--Font-->
+    <FontFamily x:Key="SpoqaHansMediumFont">pack://application:,,,/;component/Resource/Fonts/SpoqaHanSansNeo-Medium.ttf#Spoqa Han Sans Neo Medium</FontFamily>
+    <FontFamily x:Key="SpoqaHansRegularFont">pack://application:,,,/;component/Resource/Fonts/SpoqaHanSansNeo-Regular.ttf#Spoqa Han Sans Neo Regular</FontFamily>
+
+    <!--Geometry-->
+    <Geometry o:Freeze="True" x:Key="ErrorGeometry">M495.469714 0C224.621714 0 0 224.621714 0 495.469714c0 270.884571 224.621714 495.506286 495.469714 495.506286 270.884571 0 495.506286-224.621714 495.506286-495.506286C990.976 224.621714 766.354286 0 495.469714 0z m211.419429 634.221714c19.821714 19.821714 19.821714 46.226286 0 66.048s-46.226286 19.821714-66.048 0l-138.752-138.715428-145.334857 145.334857a51.858286 51.858286 0 0 1-72.667429 0 51.858286 51.858286 0 0 1 0-72.667429l145.334857-145.334857-138.752-138.752c-19.821714-19.821714-19.821714-46.226286 0-66.048s46.262857-19.821714 66.084572 0l138.715428 138.715429 145.371429-145.334857a51.858286 51.858286 0 0 1 72.667428 0 51.858286 51.858286 0 0 1 0 72.667428l-145.371428 145.334857 138.752 138.752z</Geometry>
+
+    <!--Style-->
+    <Style x:Key="CloseButtonStyle" TargetType="Button">
+        <Setter Property="Foreground" Value="Black"/>
+        <Setter Property="FontSize" Value="{StaticResource TextFontSize}"/>
+        <Setter Property="FocusVisualStyle" Value="{StaticResource FocusVisual}"/>        
+        <Setter Property="Background" Value="{x:Null}"/>
+        <Setter Property="HorizontalContentAlignment" Value="Center"/>
+        <Setter Property="VerticalContentAlignment" Value="Center"/>
+        <Setter Property="Padding" Value="0"/>
+        <Setter Property="BorderThickness" Value="0"/>
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="Button">
+                    <!--BorderElement.CornerRadius는 Attached Property라서 TemplatedParent에 해당하는 Element에서 CornerRadius 속성을 선언하지 않아도
+                    CornerRadius 속성을 가질 수 있게됨
+                    TemplatedParent 는 TemplateBinding처럼 이 Template이 적용된 Control의 속성과 바인딩 하기 위해서 사용한다.
+                    -->
+                    <Border x:Name="Chrome" 
+                            CornerRadius="{Binding Path=(attach:BorderElement.CornerRadius), RelativeSource={RelativeSource TemplatedParent}}" 
+                            SnapsToDevicePixels="true" 
+                            BorderThickness="{TemplateBinding BorderThickness}" 
+                            BorderBrush="{TemplateBinding BorderBrush}" 
+                            Background="{TemplateBinding Background}">
+                        <ContentPresenter Margin="{TemplateBinding Padding}" 
+                                          RecognizesAccessKey="True" 
+                                          HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}" 
+                                          VerticalAlignment="{TemplateBinding VerticalContentAlignment}" 
+                                          SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}"/>
+                    </Border>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsMouseOver" Value="True">
+                            <Setter Property="Opacity" Value=".9"/>
+                            <Setter Property="Background" 
+                                    TargetName="Chrome" Value="{Binding Path=(attach:BackgroundSwitchElement.MouseHoverBackground), RelativeSource={RelativeSource TemplatedParent}}"/>
+                        </Trigger>
+                        <Trigger Property="IsPressed" Value="True">
+                            <Setter Property="Opacity" Value=".6"/>
+                            <Setter Property="Background" 
+                                    TargetName="Chrome" Value="{Binding Path=(attach:BackgroundSwitchElement.MouseDownBackground), RelativeSource={RelativeSource TemplatedParent}}"/>
+                        </Trigger>
+                        <Trigger Property="IsEnabled" Value="False">
+                            <Setter Property="Opacity" Value="0.4"/>
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+    
+    <Style x:Key="TextBlockStyle" TargetType="TextBlock">
+        <Setter Property="VerticalAlignment" Value="Center"/>
+        <Setter Property="HorizontalAlignment" Value="Center"/>
+        <Setter Property="Foreground" Value="Black"/>
+    </Style>
+
+    <Style x:Key="GrowlStyle" TargetType="growl:Growl">
+        <Setter Property="Focusable" Value="False"/>
         <Setter Property="Height" Value="64"/>
+        <Setter Property="MinHeight" Value="60"/>
         <Setter Property="Width" Value="300"/>
+        <Setter Property="Margin" Value="10,0,0,10"/>
+        <Setter Property="MaxWidth" Value="320"/>
+        <!--Attached Property 설정
+        ControlTemplate 트리 안에 있는 Element에서 uicon:BorderElement.CornerRadius를 사용하면 
+        여기서 설정한 값(8)을 가져온다-->
+        <Setter Property="attach:BorderElement.CornerRadius" Value="8"/>
+        <Setter Property="Background" Value="White"/>
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="growl:Growl">
-                    <Grid Background="Red">
+                    <Grid Name="PART_GridMain">
+                        <!--Show 애니메이션을 위해-->
+                        <Grid.RenderTransform>
+                            <TransformGroup>
+                                <!--현재 위치에서 MaxWidth 만큼 이동-->
+                                <TranslateTransform X="{TemplateBinding MaxWidth}"/>
+                            </TransformGroup>
+                        </Grid.RenderTransform>
                         
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="42"/>
+                            <ColumnDefinition/>
+                            <ColumnDefinition Width="Auto"/>
+                        </Grid.ColumnDefinitions>
+
+                        <Grid.RowDefinitions>
+                            <RowDefinition/>
+                            <RowDefinition Height="Auto"/>
+                        </Grid.RowDefinitions>
+
+
+                        <!--uniGrowl에서 설정된 8이라는 attach:BorderElement.CornerRadius속성 사용-->
+                        <Border CornerRadius="{Binding Path=(attach:BorderElement.CornerRadius), RelativeSource={RelativeSource TemplatedParent}}"
+                                Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="3" Grid.RowSpan="2"
+                                Effect="{StaticResource EdgeShadow}" 
+                                Background="{TemplateBinding Background}"/>
+                        
+                        <!--Icon-->
+                        <Image Grid.Row="0" Grid.Column="0" 
+                               VerticalAlignment="Center" Stretch="Uniform"
+                               Width="20" Height="20">
+                            <Image.Style>
+                                <Style TargetType="Image">
+                                    <Style.Triggers>
+                                        <DataTrigger Binding="{Binding IconType, RelativeSource={RelativeSource AncestorType=growl:Growl}}" 
+                                                     Value="warning">
+                                            <Setter Property="Source" Value="{StaticResource WarningImg}"/>
+                                        </DataTrigger>
+                                        <DataTrigger Binding="{Binding IconType, RelativeSource={RelativeSource AncestorType=growl:Growl}}" 
+                                                     Value="whitelist">
+                                            <Setter Property="Source" Value="{StaticResource CheckImg}"/>
+                                        </DataTrigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </Image.Style>
+                        </Image>
+
+                        <!--Message & Description Text-->
+                        <StackPanel Grid.Row="0" Grid.Column="1" VerticalAlignment="Center">
+                            <TextBlock Text="{TemplateBinding Message}" 
+                                       Style="{StaticResource TextBlockStyle}" 
+                                       HorizontalAlignment="Left" TextWrapping="Wrap"
+                                       FontFamily="{StaticResource SpoqaHansRegularFont}" FontSize="14" Foreground="Black" Opacity="0.87"/>
+                            <TextBlock Text="{TemplateBinding Description}" 
+                                       Style="{StaticResource TextBlockStyle}"
+                                       Visibility="{Binding ShowDescription, RelativeSource={RelativeSource TemplatedParent}, Converter={StaticResource Boolean2VisibilityConverter}}"
+                                       FontFamily="{StaticResource SpoqaHansRegularFont}" FontSize="12" Foreground="Black" Opacity="0.38"
+                                       HorizontalAlignment="Left" Margin="0,4,0,0"/>
+                        </StackPanel>
+
+                        <!--Close Button-->
+                        <Button Grid.Row="0" 
+                                Name="PART_ButtonClose"
+                                Command="cmd:ControlCommands.Close" Style="{StaticResource CloseButtonStyle}"
+                                Visibility="Collapsed" Margin="11,0" 
+                                Grid.Column="2" Background="Transparent" 
+                                VerticalAlignment="Center" HorizontalAlignment="Center" 
+                                Width="18" Height="18">
+                            <Path Data="{StaticResource ErrorGeometry}" Stretch="Uniform" Fill="Tomato"/>
+                        </Button>
                     </Grid>
                 </ControlTemplate>
             </Setter.Value>
